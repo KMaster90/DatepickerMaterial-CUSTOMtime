@@ -1,0 +1,62 @@
+<input type="datetime-local" #e [(ngModel)]="value">
+<button (click)="setDatePicker(1)"></button>
+<mat-form-field appearance="fill" class="example-form-field">
+  <mat-label>Choose a date</mat-label>
+  <input matInput type="datetime-local"/>
+  <input hidden matInput [matDatepicker]="datepicker" (dateChange)="setDatePicker($event)"/>
+  <mat-hint>MM/DD/YYYY</mat-hint>
+  <mat-datepicker-toggle
+    matIconSuffix
+    [for]="datepicker"
+  ></mat-datepicker-toggle>
+  <!-- #docregion datepicker-actions -->
+  <mat-datepicker #datepicker>
+    <mat-datepicker-actions>
+      <mat-card
+        style="
+          background: white;
+          width: 9rem;
+          position: 'absolute';
+          top: 0;
+          right: '-9rem';
+          bottom: 0;
+          overflow: hidden;
+        "
+      >
+        <mat-card-content style="display: flex; justify-content: center">
+          <mat-list
+            role="list"
+            style="overflow: auto; height: 22rem"
+            class="scrollbar"
+          >
+            <mat-list-item
+              *ngFor="let h of hours"
+              [class.selected]="h==mySelectedDate.h"
+              role="listitem"
+              (click)="mySelectedDate.h=h"
+              >{{h}}</mat-list-item
+            >
+          </mat-list>
+          <mat-list
+            role="list"
+            style="overflow: auto; height: 22rem"
+            class="scrollbar"
+          >
+            <mat-list-item
+              *ngFor="let m of minutes"
+              [class.selected]="m==mySelectedDate.m"
+              role="listitem"
+              (click)="mySelectedDate.m=m"
+              >{{m}}</mat-list-item
+            >
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+      <button mat-button matDatepickerCancel>Cancel</button>
+      <button mat-raised-button color="primary" matDatepickerApply>
+        Apply
+      </button>
+    </mat-datepicker-actions>
+  </mat-datepicker>
+  <!-- #enddocregion datepicker-actions -->
+</mat-form-field>

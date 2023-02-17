@@ -1,0 +1,17 @@
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 30px;
+}
+
+html, body {
+  height: 100%;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+mat-list-item.selected span{
+  color: white !important;
+}
