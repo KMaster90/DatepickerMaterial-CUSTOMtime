@@ -44,7 +44,22 @@ export class DatepickerActionsExample {
     const regex = /^([A-Za-z]{3} \w{3} \d{2} \d{4} \d{2}:\d{2}:\d{2})/;
     const match = regex.exec(stringDate);
     this.value = `${match ? match[1] : null} GMT${this.SHOP_TIMEZONE_OFFSET}`;
+    console.log('value', this.value)
   }
 
-  scrollIntoView() {}
+  scrollIntoView() {
+    const center: ScrollIntoViewOptions = {
+      behavior: 'auto',
+      block: 'center',
+      inline: 'center',
+    };
+    setTimeout(() => {
+      this.hoursItem
+        .find((i) => i._elementRef.nativeElement.classList.contains('selected'))
+        ?._elementRef.nativeElement.scrollIntoView(center);
+      this.minutesItem
+        .find((i) => i._elementRef.nativeElement.classList.contains('selected'))
+        ?._elementRef.nativeElement.scrollIntoView(center);
+    });
+  }
 }
