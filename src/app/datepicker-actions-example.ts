@@ -2,8 +2,9 @@ import { Component, QueryList, ViewChildren } from '@angular/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { first } from 'rxjs';
 import 'moment-timezone';
-import moment from 'moment';
+import moment, { utc } from 'moment';
 import { MatListItem } from '@angular/material/list';
+import { ApiService } from './api.service';
 
 /** @title Datepicker action buttons */
 @Component({
@@ -23,9 +24,14 @@ export class DatepickerActionsExample {
   hours = [...Array(24).keys()].map((x) => `${x}`.padStart(2, '0'));
   minutes = [...Array(60).keys()].map((x) => `${x}`.padStart(2, '0'));
   SHOP_TIMEZONE_OFFSET;
-  constructor() {
+
+  constructor(private api:ApiService) {
     moment.tz.setDefault('America/New_York');
     this.SHOP_TIMEZONE_OFFSET = moment(new Date()).format('ZZ');
+  }
+
+  getDate(){
+    this.api.getDate().subscribe((arr)=>this.value=arr[arr.length-1].date);
   }
 
   setDatePicker(ev?: any) {
@@ -44,7 +50,9 @@ export class DatepickerActionsExample {
     const regex = /^([A-Za-z]{3} \w{3} \d{2} \d{4} \d{2}:\d{2}:\d{2})/;
     const match = regex.exec(stringDate);
     this.value = `${match ? match[1] : null} GMT${this.SHOP_TIMEZONE_OFFSET}`;
-    console.log('value', this.value)
+    const utcDate = `${new Date(this.value).getTime()}`;
+    console.log('value', this.value, utcDate)
+    this.api.postDate(utcDate).subscribe(console.log);
   }
 
   scrollIntoView() {
