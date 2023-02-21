@@ -7,6 +7,7 @@ import { MatListItem } from '@angular/material/list';
 import { ApiService } from './api.service';
 import { DatePipe } from '@angular/common';
 /** @title Datepicker action buttons */
+moment.tz.setDefault('America/New_York');
 @Component({
   selector: 'datepicker-actions-example',
   templateUrl: 'datepicker-actions-example.html',
@@ -15,6 +16,7 @@ import { DatePipe } from '@angular/common';
 export class DatepickerActionsExample {
   @ViewChildren('hours') hoursItem: QueryList<MatListItem>;
   @ViewChildren('minutes') minutesItem: QueryList<MatListItem>;
+  SHOP_TIMEZONE_OFFSET = moment(new Date()).format('ZZ');
   value = new Date().toString();
   mySelectedDate = {
     date: this.value,
@@ -23,18 +25,14 @@ export class DatepickerActionsExample {
   };
   hours = [...Array(24).keys()].map((x) => `${x}`.padStart(2, '0'));
   minutes = [...Array(60).keys()].map((x) => `${x}`.padStart(2, '0'));
-  SHOP_TIMEZONE_OFFSET;
 
   constructor(private api: ApiService, private datePipe: DatePipe) {
-    moment.tz.setDefault('America/New_York');
-    this.SHOP_TIMEZONE_OFFSET = moment(new Date()).format('ZZ');
-  }
+   }
+
   getShopDateTime(format: string) {
-    return (
-      this.datePipe.transform(this.value, format, this.SHOP_TIMEZONE_OFFSET) ||
-      ''
-    );
+    return this.datePipe.transform(this.value, format, this.SHOP_TIMEZONE_OFFSET) || '';
   }
+
   getDate() {
     this.api.getDate().subscribe((arr) => {
       this.value = arr[arr.length - 1].date;
