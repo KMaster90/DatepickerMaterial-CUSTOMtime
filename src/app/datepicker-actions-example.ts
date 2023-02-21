@@ -5,7 +5,7 @@ import 'moment-timezone';
 import moment, { utc } from 'moment';
 import { MatListItem } from '@angular/material/list';
 import { ApiService } from './api.service';
-import { DatePipe } from '@angular/common';
+import { TilbyDatePipe } from './tilby-date.pipe';
 /** @title Datepicker action buttons */
 moment.tz.setDefault('America/New_York');
 @Component({
@@ -26,11 +26,12 @@ export class DatepickerActionsExample {
   hours = [...Array(24).keys()].map((x) => `${x}`.padStart(2, '0'));
   minutes = [...Array(60).keys()].map((x) => `${x}`.padStart(2, '0'));
 
-  constructor(private api: ApiService, private datePipe: DatePipe) {
+  constructor(private api: ApiService, private tilbyDatePipe: TilbyDatePipe) {
+    console.log('TilbyDatePipe.utcDate',TilbyDatePipe.utcDate())
    }
 
   getShopDateTime(format: string) {
-    return this.datePipe.transform(this.value, format, this.SHOP_TIMEZONE_OFFSET) || '';
+    return this.tilbyDatePipe.transform(this.value, format, this.SHOP_TIMEZONE_OFFSET) || '';
   }
 
   getDate() {

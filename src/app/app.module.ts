@@ -1,16 +1,17 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MaterialExampleModule} from '../material.module';
-import {DatepickerActionsExample} from './datepicker-actions-example';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatNativeDateModule} from '@angular/material/core';
-import {HttpClientModule} from '@angular/common/http';
-import { DatePipe } from '@angular/common';
+import { MaterialExampleModule } from '../material.module';
+import { DatepickerActionsExample } from './datepicker-actions-example';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+import { HttpClientModule } from '@angular/common/http';
+import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
+import { TilbyDatePipe } from './tilby-date.pipe';
 
 @NgModule({
-  declarations: [DatepickerActionsExample],
+  declarations: [DatepickerActionsExample, TilbyDatePipe],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
@@ -20,7 +21,10 @@ import { DatePipe } from '@angular/common';
     MaterialExampleModule,
     ReactiveFormsModule,
   ],
-  providers: [DatePipe],
+  providers: [
+    { provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: { timezone: '-1200' } },
+    TilbyDatePipe,
+  ],
   bootstrap: [DatepickerActionsExample],
 })
 export class AppModule {}
