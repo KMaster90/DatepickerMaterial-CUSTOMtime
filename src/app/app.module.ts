@@ -7,6 +7,7 @@ import {DatepickerActionsExample} from './datepicker-actions-example';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatNativeDateModule} from '@angular/material/core';
 import {HttpClientModule} from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [DatepickerActionsExample],
@@ -19,7 +20,7 @@ import {HttpClientModule} from '@angular/common/http';
     MaterialExampleModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [DatepickerActionsExample],
 })
 export class AppModule {}
