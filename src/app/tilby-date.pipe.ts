@@ -1,29 +1,37 @@
 import { DatePipe, DatePipeConfig, DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { Inject, LOCALE_ID, Pipe } from '@angular/core';
 import {DateTime} from 'luxon';
-const SHOP_TIMEZONE = "America/New_York";
+import { ApiService } from './api.service';
 @Pipe({
      name: 'tilbyDate'
 })
-export class TilbyDatePipe extends DatePipe {    
+export class TilbyDatePipe extends DatePipe {  
+  shopTimezoneName='';
   constructor(
     @Inject(DATE_PIPE_DEFAULT_OPTIONS) private datePipeConfig: DatePipeConfig,
-    @Inject(LOCALE_ID) private localeId: string
+    @Inject(LOCALE_ID) private localeId: string,
     ) {        
-      super(localeId);    
+      super(localeId); 
+     
     }   
 
     public override transform(value: any, pattern: string = 'fullDate', timezone:string = this.datePipeConfig.timezone ) : any {        
       return super.transform(value, pattern, timezone);    
     }
 
-    private _shopDate='';
-    set shopDate(localDate:string){
-      this._shopDate = DateTime.fromISO(localDate).setZone(SHOP_TIMEZONE, {keepLocalTime: true}).toString()
+    getGMTOffset(timezoneName: string){
+      return DateTime.local().setZone(timezoneName).offsetNameShort;
     }
-    get shopDate(){return this._shopDate}
+    setPipeTimezone(timezoneName:string){
+      this.shopTimezoneName=timezoneName;
+      this.datePipeConfig.timezone = this.getGMTOffset(timezoneName);
+    }
 
-    static utcDate(localDate=new Date()){
-      return DateTime.fromJSDate(localDate).toUTC().toString();
+    shopDate(localDate:string){
+      return DateTime.fromJSDate(new Date(localDate)).setZone(this.shopTimezoneName, {keepLocalTime: true}).toString()
+    }
+
+    static utcDate(localDate=new Date().toString()){
+      return DateTime.fromJSDate(new Date(localDate)).toMillis();
     }
   }

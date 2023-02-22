@@ -1,13 +1,10 @@
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, QueryList, ViewChildren } from '@angular/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { first } from 'rxjs';
-import 'moment-timezone';
-import moment, { utc } from 'moment';
 import { MatListItem } from '@angular/material/list';
 import { ApiService } from './api.service';
 import { TilbyDatePipe } from './tilby-date.pipe';
 /** @title Datepicker action buttons */
-moment.tz.setDefault('America/New_York');
 @Component({
   selector: 'datepicker-actions-example',
   templateUrl: 'datepicker-actions-example.html',
@@ -16,7 +13,6 @@ moment.tz.setDefault('America/New_York');
 export class DatepickerActionsExample {
   @ViewChildren('hours') hoursItem: QueryList<MatListItem>;
   @ViewChildren('minutes') minutesItem: QueryList<MatListItem>;
-  SHOP_TIMEZONE_OFFSET = moment(new Date()).format('ZZ');
   value = new Date().toString();
   mySelectedDate = {
     date: this.value,
@@ -26,12 +22,16 @@ export class DatepickerActionsExample {
   hours = [...Array(24).keys()].map((x) => `${x}`.padStart(2, '0'));
   minutes = [...Array(60).keys()].map((x) => `${x}`.padStart(2, '0'));
 
-  constructor(private api: ApiService, private tilbyDatePipe: TilbyDatePipe) {
-    console.log('TilbyDatePipe.utcDate',TilbyDatePipe.utcDate())
-   }
+  constructor(private api: ApiService, public tilbyDatePipe: TilbyDatePipe, private cd:ChangeDetectorRef) {
+    console.log('TilbyDatePipe.utcDate', TilbyDatePipe.utcDate());
+    this.api.getTimezone().subscribe(res=>{
+      this.tilbyDatePipe.setPipeTimezone(res[0].timezone);
+    setTimeout(()=>this.cd.detectChanges())
+    });
+  }
 
   getShopDateTime(format: string) {
-    return this.tilbyDatePipe.transform(this.value, format, this.SHOP_TIMEZONE_OFFSET) || '';
+    return this.tilbyDatePipe.transform(this.value, format) || '';
   }
 
   getDate() {
@@ -45,6 +45,7 @@ export class DatepickerActionsExample {
   setDatePicker(ev?: any) {
     this.mySelectedDate.date = ev?.value;
     const stringDate = this.setDateTime(this.mySelectedDate);
+    console.log('STRING_DATE',stringDate)
     this.setShopTimezone(stringDate);
   }
 
@@ -55,12 +56,12 @@ export class DatepickerActionsExample {
   }
 
   setShopTimezone(stringDate: string) {
-    const regex = /^([A-Za-z]{3} \w{3} \d{2} \d{4} \d{2}:\d{2}:\d{2})/;
-    const match = regex.exec(stringDate);
-    this.value = `${match ? match[1] : null} GMT${this.SHOP_TIMEZONE_OFFSET}`;
-    const utcDate = `${new Date(this.value).getTime()}`;
-    console.log('value', this.value, utcDate);
-    this.api.postDate(utcDate).subscribe(console.log);
+    this.value = this.tilbyDatePipe.shopDate(stringDate);
+    const utcDateShop = TilbyDatePipe.utcDate(this.value);
+    const utcDate = TilbyDatePipe.utcDate();
+    console.log('value',stringDate, this.value,utcDateShop, utcDate);
+    // this.api.postDate(utcDate).subscribe(console.log);
+    this.api.postDate(utcDateShop).subscribe(console.log);
   }
 
   scrollIntoView() {

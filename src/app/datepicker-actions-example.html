@@ -3,12 +3,12 @@
   <input
     matInput
     type="datetime-local"
-    [value]="value|tilbyDate:'yyyy-MM-ddTHH:mm':SHOP_TIMEZONE_OFFSET"
+    [value]="value|tilbyDate:'yyyy-MM-ddTHH:mm'"
   />
   <input
     hidden
     matInput
-    [value]="value|tilbyDate:'yyyy-MM-dd':SHOP_TIMEZONE_OFFSET"
+    [value]="value|tilbyDate:'yyyy-MM-dd'"
     [matDatepicker]="datepicker"
     (dateChange)="setDatePicker($event)"
   />
