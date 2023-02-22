@@ -13,12 +13,8 @@ import { TilbyDatePipe } from './tilby-date.pipe';
 export class DatepickerActionsExample {
   @ViewChildren('hours') hoursItem: QueryList<MatListItem>;
   @ViewChildren('minutes') minutesItem: QueryList<MatListItem>;
-  value = TilbyDatePipe.now();
-  mySelectedDate = {
-    date: this.value,
-    h: this.getShopDateTime('HH'),
-    m: this.getShopDateTime('mm'),
-  };
+  value:string;
+  mySelectedDate:any;
   hours = [...Array(24).keys()].map((x) => `${x}`.padStart(2, '0'));
   minutes = [...Array(60).keys()].map((x) => `${x}`.padStart(2, '0'));
 
@@ -26,7 +22,17 @@ export class DatepickerActionsExample {
     console.log('TilbyDatePipe.utcDate', TilbyDatePipe.utcDate());
     this.api.getTimezone().subscribe(res=>{
       this.tilbyDatePipe.setPipeTimezone(res[0].timezone);
+      this.myInit();
     });
+  }
+
+  myInit(){
+    this.value = TilbyDatePipe.now();
+    this.mySelectedDate = {
+      date: this.value,
+      h: this.getShopDateTime('HH'),
+      m: this.getShopDateTime('mm'),
+    };
   }
 
   getShopDateTime(format: string) {

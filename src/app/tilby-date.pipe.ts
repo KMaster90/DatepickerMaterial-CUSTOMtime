@@ -4,6 +4,7 @@ import {DateTime} from 'luxon';
 import { ApiService } from './api.service';
 @Pipe({
      name: 'tilbyDate'
+  // ,pure:false
 })
 export class TilbyDatePipe extends DatePipe {  
   shopTimezoneName='';
