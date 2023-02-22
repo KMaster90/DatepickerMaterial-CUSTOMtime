@@ -13,7 +13,7 @@ import { TilbyDatePipe } from './tilby-date.pipe';
 export class DatepickerActionsExample {
   @ViewChildren('hours') hoursItem: QueryList<MatListItem>;
   @ViewChildren('minutes') minutesItem: QueryList<MatListItem>;
-  value = new Date().toString();
+  value = TilbyDatePipe.now();
   mySelectedDate = {
     date: this.value,
     h: this.getShopDateTime('HH'),
@@ -22,11 +22,10 @@ export class DatepickerActionsExample {
   hours = [...Array(24).keys()].map((x) => `${x}`.padStart(2, '0'));
   minutes = [...Array(60).keys()].map((x) => `${x}`.padStart(2, '0'));
 
-  constructor(private api: ApiService, public tilbyDatePipe: TilbyDatePipe, private cd:ChangeDetectorRef) {
+  constructor(private api: ApiService, public tilbyDatePipe: TilbyDatePipe) {
     console.log('TilbyDatePipe.utcDate', TilbyDatePipe.utcDate());
     this.api.getTimezone().subscribe(res=>{
       this.tilbyDatePipe.setPipeTimezone(res[0].timezone);
-    setTimeout(()=>this.cd.detectChanges())
     });
   }
 

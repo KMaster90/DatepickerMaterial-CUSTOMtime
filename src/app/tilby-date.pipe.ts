@@ -31,6 +31,11 @@ export class TilbyDatePipe extends DatePipe {  
       return DateTime.fromJSDate(new Date(localDate)).setZone(this.shopTimezoneName, {keepLocalTime: true}).toString()
     }
 
+    
+  static now(){
+    return DateTime.now().toString();
+  }
+
     static utcDate(localDate=new Date().toString()){
       return DateTime.fromJSDate(new Date(localDate)).toMillis();
     }
